@@ -3,6 +3,13 @@ package com.AbdulAbdillahi.smartpantrymanager.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 
 /**
  * Creates and manages the app's local SQLite database.
@@ -107,5 +114,98 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
         onCreate(db);
+    }
+    // ===================== PANTRY CRUD =====================
+
+    /** CREATE: returns the new row's id, or -1 if it failed (e.g. a duplicate ingredient). */
+    public long insertPantryItem(PantryItem item) {
+        SQLiteDatabase db = getWritableDatabase();
+        long id = db.insert(TABLE_PANTRY, null, toContentValues(item));
+        if (id != -1) {
+            item.setId(id);
+        }
+        return id;
+    }
+
+    /** READ (all): soonest-expiring first, items with no expiry date last. */
+    public List<PantryItem> getAllPantryItems() {
+        List<PantryItem> items = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String orderBy = "CASE WHEN " + COL_PANTRY_EXPIRY + " IS NULL THEN 1 ELSE 0 END, "
+                + COL_PANTRY_EXPIRY + " ASC, "
+                + COL_PANTRY_NAME + " COLLATE NO CASE ASC";
+
+        // try-with-resources closes the cursor automatically, preventing memory leaks
+        try (Cursor cursor = db.query(TABLE_PANTRY, null, null, null, null, null, orderBy)) {
+            while (cursor.moveToNext()) {
+                items.add(pantryItemFromCursor(cursor));
+            }
+        }
+        return items;
+    }
+
+    /** READ (one): returns null if no item has this id. */
+    public PantryItem getPantryItem(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor cursor = db.query(TABLE_PANTRY, null,
+                COL_PANTRY_ID + " = ?", new String[]{String.valueOf(id)},
+                null, null, null)) {
+            return cursor.moveToFirst() ? pantryItemFromCursor(cursor) : null;
+        }
+    }
+
+    /** UPDATE: returns true if a row was changed. */
+    public boolean updatePantryItem(PantryItem item) {
+        // If the user tops up above the original amount, that becomes the new "full jar"
+        if (item.getQuantity() > item.getInitialQuantity()) {
+            item.setInitialQuantity(item.getQuantity());
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        int rows = db.update(TABLE_PANTRY, toContentValues(item),
+                COL_PANTRY_ID + " = ?", new String[]{String.valueOf(item.getId())});
+        return rows > 0;
+    }
+
+    /** DELETE: returns true if a row was removed. */
+    public boolean deletePantryItem(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        int rows = db.delete(TABLE_PANTRY, COL_PANTRY_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        return rows > 0;
+    }
+
+    // ----- helpers -----
+
+    /** Converts a PantryItem into column/value pairs for inserting or updating. */
+    private ContentValues toContentValues(PantryItem item) {
+        ContentValues values = new ContentValues();
+        values.put(COL_PANTRY_NAME, item.getName().trim());
+        values.put(COL_PANTRY_NORMALIZED, normalize(item.getName()));
+        values.put(COL_PANTRY_QUANTITY, item.getQuantity());
+        values.put(COL_PANTRY_INITIAL_QTY, item.getInitialQuantity());
+        values.put(COL_PANTRY_UNIT, item.getUnit());
+        if (item.hasExpiryDate()) {
+            values.put(COL_PANTRY_EXPIRY, item.getExpiryDate());
+        } else {
+            values.putNull(COL_PANTRY_EXPIRY);
+        }
+        return values;
+    }
+
+    /** Builds a PantryItem from the row the cursor is currently pointing at. */
+    private PantryItem pantryItemFromCursor(Cursor c) {
+        int expiryIndex = c.getColumnIndexOrThrow(COL_PANTRY_EXPIRY);
+        return new PantryItem(
+                c.getLong(c.getColumnIndexOrThrow(COL_PANTRY_ID)),
+                c.getString(c.getColumnIndexOrThrow(COL_PANTRY_NAME)),
+                c.getDouble(c.getColumnIndexOrThrow(COL_PANTRY_QUANTITY)),
+                c.getDouble(c.getColumnIndexOrThrow(COL_PANTRY_INITIAL_QTY)),
+                c.getString(c.getColumnIndexOrThrow(COL_PANTRY_UNIT)),
+                c.isNull(expiryIndex) ? null : c.getString(expiryIndex));
+    }
+
+    /** Temporary: lowercase + trim. Replaced by the full normaliser on 9 October. */
+    private String normalize(String name) {
+        return name.trim().toLowerCase(Locale.ROOT);
     }
 }
