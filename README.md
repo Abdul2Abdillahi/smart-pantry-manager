@@ -22,14 +22,14 @@ account or server setup, and keeps data after the app is closed.
 - Java
 - Android Studio
 - SQLite via SQLiteOpenHelper
-- Minimum SDK: API 24 (Android 7.0)
+- Minimum SDK: API 26 (Android 8.0)
 
 ## Setup and running
 1. Clone this repository:
    `git clone https://github.com/Abdul2Abdillahi/smart-pantry-manager.git`
 2. Open the project folder in Android Studio.
 3. Wait for Gradle to finish syncing.
-4. Run the app on an emulator or physical device (API 24 or higher).
+4. Run the app on an emulator or physical device (API 26 or higher).
 
 ## Author
 Abdul Abdillahi, 402111750
