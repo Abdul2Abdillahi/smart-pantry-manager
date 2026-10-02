@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
+import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recycler = findViewById(R.id.pantryRecycler);
         recycler.setLayoutManager(new GridLayoutManager(this, JARS_PER_SHELF));
+        recycler.addItemDecoration(new ShelfDecoration(this, JARS_PER_SHELF));
         adapter = new PantryAdapter(item ->
                 // Editing comes next session; for now, confirm taps work
                 Toast.makeText(this, item.getName(), Toast.LENGTH_SHORT).show());
