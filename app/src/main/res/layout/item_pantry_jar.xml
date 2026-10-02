@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="6dp"
+    android:paddingTop="16dp">
+
+    <!-- Lid: its colour shows freshness (tinted in PantryAdapter) -->
+    <View
+        android:id="@+id/jarLid"
+        android:layout_width="56dp"
+        android:layout_height="11dp"
+        android:background="@drawable/jar_lid" />
+
+    <!-- Jar body: glass shape with a fill level inside -->
+    <FrameLayout
+        android:id="@+id/jarBody"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/jar_body"
+        android:padding="2dp">
+
+        <!-- Fill level: height is set in PantryAdapter from how much is left -->
+        <View
+            android:id="@+id/jarFill"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/jarName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textColor="@color/ink"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Tomatoes" />
+
+            <TextView
+                android:id="@+id/jarQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ink_muted"
+                android:textSize="13sp"
+                tools:text="6 pcs" />
+
+            <TextView
+                android:id="@+id/jarLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="Use today"
+                tools:visibility="visible" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

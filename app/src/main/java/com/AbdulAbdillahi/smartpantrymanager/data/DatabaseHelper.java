@@ -133,7 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String orderBy = "CASE WHEN " + COL_PANTRY_EXPIRY + " IS NULL THEN 1 ELSE 0 END, "
                 + COL_PANTRY_EXPIRY + " ASC, "
-                + COL_PANTRY_NAME + " COLLATE NO CASE ASC";
+                + COL_PANTRY_NAME + " COLLATE NOCASE ASC";
 
         // try-with-resources closes the cursor automatically, preventing memory leaks
         try (Cursor cursor = db.query(TABLE_PANTRY, null, null, null, null, null, orderBy)) {
