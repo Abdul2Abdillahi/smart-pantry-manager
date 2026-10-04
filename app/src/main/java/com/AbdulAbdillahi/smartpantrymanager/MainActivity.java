@@ -1,5 +1,6 @@
 package com.AbdulAbdillahi.smartpantrymanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -14,11 +15,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.AbdulAbdillahi.smartpantrymanager.UI.EditIngredientActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
 import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
                 // Editing comes next session; for now, confirm taps work
                 Toast.makeText(this, item.getName(), Toast.LENGTH_SHORT).show());
         recycler.setAdapter(adapter);
+
+        // + button: open the form in "add" mode (no item id passed)
+        FloatingActionButton addFab = findViewById(R.id.addFab);
+        addFab.setOnClickListener(v ->
+                startActivity(new Intent(this, EditIngredientActivity.class)));
+
     }
 
     @Override

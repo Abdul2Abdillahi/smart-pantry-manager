@@ -11,4 +11,46 @@
         <item quantity="one">%d ingredient</item>
         <item quantity="other">%d ingredients</item>
     </plurals>
+    <!-- Add/Edit Ingredient screen -->
+    <string name="title_add_ingredient">Add ingredient</string>
+    <string name="title_edit_ingredient">Edit ingredient</string>
+    <string name="hint_name">Ingredient name</string>
+    <string name="hint_quantity">Quantity</string>
+    <string name="hint_unit">Unit</string>
+    <string name="hint_expiry">Expiry date (optional)</string>
+    <string name="action_save_new">Save to shelf</string>
+    <string name="action_save_changes">Save changes</string>
+    <string name="action_delete">Delete from shelf</string>
+    <string name="action_remove_expiry">Remove expiry date</string>
+    <string name="cd_add_ingredient">Add ingredient</string>
+    <string name="cd_back">Back</string>
+    <string name="toast_saved">%1$s saved</string>
+    <string name="toast_deleted">%1$s deleted</string>
+
+    <!-- Validation errors -->
+    <string name="error_name_required">Enter an ingredient name</string>
+    <string name="error_quantity_required">Enter a quantity</string>
+    <string name="error_quantity_invalid">Enter a number greater than 0</string>
+    <string name="error_quantity_too_large">That quantity is too large</string>
+    <string name="error_unit_required">Choose a unit from the list</string>
+    <string name="error_expiry_past">A new item can\'t already be expired</string>
+    <string name="error_duplicate">This is already on your shelf. Tap its jar to edit it instead.</string>
+
+    <!-- Delete confirmation -->
+    <string name="delete_title">Delete %1$s?</string>
+    <string name="delete_message">This removes it from your shelf. Recipes that need it will stop being suggested.</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_cancel">Cancel</string>
+
+    <!-- Fixed unit list: stops "g", "grams" and "gr" meaning the same thing -->
+    <string-array name="units">
+        <item>pcs</item>
+        <item>g</item>
+        <item>kg</item>
+        <item>ml</item>
+        <item>L</item>
+        <item>tsp</item>
+        <item>tbsp</item>
+        <item>cup</item>
+    </string-array>
 </resources>
