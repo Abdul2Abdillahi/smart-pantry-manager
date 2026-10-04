@@ -53,9 +53,12 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recycler = findViewById(R.id.pantryRecycler);
         recycler.setLayoutManager(new GridLayoutManager(this, JARS_PER_SHELF));
         recycler.addItemDecoration(new ShelfDecoration(this, JARS_PER_SHELF));
-        adapter = new PantryAdapter(item ->
-                // Editing comes next session; for now, confirm taps work
-                Toast.makeText(this, item.getName(), Toast.LENGTH_SHORT).show());
+        // Tapping a jar opens the same form in "edit" mode, passing the item's id
+        adapter = new PantryAdapter(item -> {
+            Intent intent = new Intent(this, EditIngredientActivity.class);
+            intent.putExtra(EditIngredientActivity.EXTRA_ITEM_ID, item.getId());
+            startActivity(intent);
+        });
         recycler.setAdapter(adapter);
 
         // + button: open the form in "add" mode (no item id passed)

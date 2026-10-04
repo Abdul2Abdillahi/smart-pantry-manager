@@ -1,6 +1,7 @@
 package com.AbdulAbdillahi.smartpantrymanager.data;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
@@ -155,15 +156,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /** UPDATE: returns true if a row was changed. */
+    /** UPDATE: returns true if a row was changed, false if it failed (e.g. a duplicate name). */
     public boolean updatePantryItem(PantryItem item) {
         // If the user tops up above the original amount, that becomes the new "full jar"
         if (item.getQuantity() > item.getInitialQuantity()) {
             item.setInitialQuantity(item.getQuantity());
         }
         SQLiteDatabase db = getWritableDatabase();
-        int rows = db.update(TABLE_PANTRY, toContentValues(item),
-                COL_PANTRY_ID + " = ?", new String[]{String.valueOf(item.getId())});
-        return rows > 0;
+        try {
+            int rows = db.update(TABLE_PANTRY, toContentValues(item),
+                    COL_PANTRY_ID + " = ?", new String[]{String.valueOf(item.getId())});
+            return rows > 0;
+        } catch (SQLiteConstraintException e) {
+            // The UNIQUE rule rejected it: another item already has this name
+            return false;
+        }
     }
 
     /** DELETE: returns true if a row was removed. */
