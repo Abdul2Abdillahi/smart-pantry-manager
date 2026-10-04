@@ -17,6 +17,7 @@ import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -96,6 +97,23 @@ public class EditIngredientActivity extends AppCompatActivity {
         }
 
         saveButton.setOnClickListener(v -> save());
+        deleteButton.setOnClickListener(v -> confirmDelete());
+    }
+
+    /** Asks before deleting: a deleted item can't be recovered. */
+    private void confirmDelete() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.delete_title, editingItem.getName()))
+                .setMessage(R.string.delete_message)
+                .setNegativeButton(R.string.delete_cancel, null)
+                .setPositiveButton(R.string.delete_confirm, (dialog, which) -> {
+                    db.deletePantryItem(editingItem.getId());
+                    Toast.makeText(this,
+                            getString(R.string.toast_deleted, editingItem.getName()),
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .show();
     }
 
     @Override
