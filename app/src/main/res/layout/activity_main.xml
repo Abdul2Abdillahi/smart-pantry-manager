@@ -9,16 +9,32 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/pantryTitle"
-        android:layout_width="wrap_content"
+    <!-- Title row. The button is temporary until bottom navigation is added. -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
-        android:text="@string/pantry_title"
-        android:textColor="@color/ink"
-        android:textSize="34sp"
-        android:textStyle="bold" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <TextView
+            android:id="@+id/pantryTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pantry_title"
+            android:textColor="@color/ink"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cookTonightButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_cook_tonight"
+            app:backgroundTint="@color/ink" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/pantrySubtitle"
@@ -29,7 +45,6 @@
         android:textColor="@color/ink_muted"
         android:textSize="14sp"
         tools:text="9 ingredients · 2 need attention" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

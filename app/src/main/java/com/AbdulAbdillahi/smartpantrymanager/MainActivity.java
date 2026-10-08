@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.AbdulAbdillahi.smartpantrymanager.UI.EditIngredientActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
 import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
+import com.AbdulAbdillahi.smartpantrymanager.UI.SuggestedRecipesActivity;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         addFab.setOnClickListener(v ->
                 startActivity(new Intent(this, EditIngredientActivity.class)));
 
+        findViewById(R.id.cookTonightButton).setOnClickListener(v ->
+                startActivity(new Intent(this, SuggestedRecipesActivity.class)));
 
     }
 

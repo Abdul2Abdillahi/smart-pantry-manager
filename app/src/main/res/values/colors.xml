@@ -20,4 +20,7 @@
     <color name="urgent_fill">#F3D9D2</color>
     <color name="urgent_text">#9A2F20</color>
 
+    <color name="card_rule">#C8553D</color>
+    <color name="fresh_dark">#45663F</color>
+
 </resources>

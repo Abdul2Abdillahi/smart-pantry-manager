@@ -53,4 +53,28 @@
         <item>tbsp</item>
         <item>cup</item>
     </string-array>
+
+    <!-- Suggested Recipes screen -->
+    <string name="title_cook_tonight">Cook tonight</string>
+    <string name="action_cook_tonight">Cook tonight</string>
+    <string name="empty_recipes_title">No recipes match your pantry yet</string>
+    <string name="empty_recipes_message">Add more ingredients to your shelf, and recipes you can make with only what you have will appear here.</string>
+    <string name="action_go_to_shelf">Go to my shelf</string>
+    <string name="recipe_meta">%1$d min · Serves %2$d</string>
+    <string name="recipe_uses_up">Uses up your %1$s</string>
+    <string name="recipe_unlocked">Recipe unlocked: %1$s</string>
+    <string name="action_view">View</string>
+    <plurals name="suggested_subtitle">
+        <item quantity="one">%d recipe made only from what\'s on your shelf</item>
+        <item quantity="other">%d recipes made only from what\'s on your shelf</item>
+    </plurals>
+    <plurals name="recipe_have_all">
+        <item quantity="one">✓ Its %d ingredient is on your shelf</item>
+        <item quantity="other">✓ All %d ingredients on your shelf</item>
+    </plurals>
+    <plurals name="recipes_unlocked">
+        <item quantity="one">%d new recipe unlocked!</item>
+        <item quantity="other">%d new recipes unlocked!</item>
+    </plurals>
+
 </resources>
