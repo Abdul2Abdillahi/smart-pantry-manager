@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,11 +20,18 @@ import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
 import com.AbdulAbdillahi.smartpantrymanager.UI.SuggestedRecipesActivity;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
+import com.AbdulAbdillahi.smartpantrymanager.logic.RecipeMatcher;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
+import com.AbdulAbdillahi.smartpantrymanager.model.Recipe;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private PantryAdapter adapter;
     private TextView subtitle;
     private TextView emptyState;
+
+    // Recipe ids makeable at the last load. Null on the first load, so nothing
+    // is announced just for opening the app.
+    private Set<Long> makeableIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +110,43 @@ public class MainActivity extends AppCompatActivity {
         subtitle.setText(text);
 
         emptyState.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
+
+        checkForUnlockedRecipes(items);
+    }
+    /**
+     * Compares which recipes can be made now with the last time this screen loaded.
+     * Any new ones were unlocked by the change the user just made.
+     */
+    private void checkForUnlockedRecipes(List<PantryItem> items) {
+        List<Recipe> makeable = RecipeMatcher.suggest(db.getAllRecipes(), items);
+
+        Set<Long> nowIds = new HashSet<>();
+        List<Recipe> unlocked = new ArrayList<>();
+        for (Recipe recipe : makeable) {
+            nowIds.add(recipe.getId());
+            if (makeableIds != null && !makeableIds.contains(recipe.getId())) {
+                unlocked.add(recipe);
+            }
+        }
+        makeableIds = nowIds;
+
+        if (unlocked.isEmpty()) {
+            return;
+        }
+
+        String message = unlocked.size() == 1
+                ? getString(R.string.recipe_unlocked, unlocked.get(0).getName())
+                : getResources().getQuantityString(R.plurals.recipes_unlocked,
+                unlocked.size(), unlocked.size());
+
+        Snackbar.make(findViewById(R.id.main), message, Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.addFab) // sit above the + button, not on top of it
+                .setBackgroundTint(ContextCompat.getColor(this, R.color.ink))
+                .setTextColor(ContextCompat.getColor(this, android.R.color.white))
+                .setActionTextColor(ContextCompat.getColor(this, R.color.soon))
+                .setAction(R.string.action_view, v ->
+                        startActivity(new Intent(this, SuggestedRecipesActivity.class)))
+                .show();
     }
 }
 
