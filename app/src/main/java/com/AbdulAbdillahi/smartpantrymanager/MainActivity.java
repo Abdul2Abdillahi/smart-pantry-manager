@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton addFab = findViewById(R.id.addFab);
         addFab.setOnClickListener(v ->
                 startActivity(new Intent(this, EditIngredientActivity.class)));
+
 
     }
 

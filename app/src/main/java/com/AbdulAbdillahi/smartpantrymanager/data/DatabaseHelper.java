@@ -12,6 +12,12 @@ import java.util.List;
 import java.util.Locale;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 
+import com.AbdulAbdillahi.smartpantrymanager.model.Recipe;
+import com.AbdulAbdillahi.smartpantrymanager.model.RecipeIngredient;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Creates and manages the app's local SQLite database.
  * All table and column names are defined once here as constants,
@@ -216,5 +222,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /** Temporary: lowercase + trim. Replaced by the full normaliser on 9 October. */
     static String normalize(String name) {
         return name.trim().toLowerCase(Locale.ROOT);
+    }
+    // ===================== RECIPES (read-only) =====================
+
+    /** All recipes with their ingredients, sorted by name. */
+    public List<Recipe> getAllRecipes() {
+        SQLiteDatabase db = getReadableDatabase();
+        Map<Long, Recipe> recipesById = new LinkedHashMap<>(); // keeps the sorted order
+
+        try (Cursor c = db.query(TABLE_RECIPES, null, null, null, null, null,
+                COL_RECIPE_NAME + " COLLATE NOCASE ASC")) {
+            while (c.moveToNext()) {
+                Recipe recipe = recipeFromCursor(c);
+                recipesById.put(recipe.getId(), recipe);
+            }
+        }
+
+        // One query for every ingredient, then attach each to its recipe.
+        // Much faster than running 20 separate queries (one per recipe).
+        try (Cursor c = db.query(TABLE_RECIPE_INGREDIENTS, null, null, null, null, null,
+                COL_RI_ID + " ASC")) {
+            while (c.moveToNext()) {
+                Recipe recipe = recipesById.get(c.getLong(c.getColumnIndexOrThrow(COL_RI_RECIPE_ID)));
+                if (recipe != null) {
+                    recipe.addIngredient(ingredientFromCursor(c));
+                }
+            }
+        }
+        return new ArrayList<>(recipesById.values());
+    }
+
+    /** One recipe with its ingredients, or null if the id doesn't exist. */
+    public Recipe getRecipe(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Recipe recipe;
+        try (Cursor c = db.query(TABLE_RECIPES, null, COL_RECIPE_ID + " = ?",
+                new String[]{String.valueOf(id)}, null, null, null)) {
+            if (!c.moveToFirst()) {
+                return null;
+            }
+            recipe = recipeFromCursor(c);
+        }
+        try (Cursor c = db.query(TABLE_RECIPE_INGREDIENTS, null, COL_RI_RECIPE_ID + " = ?",
+                new String[]{String.valueOf(id)}, null, null, COL_RI_ID + " ASC")) {
+            while (c.moveToNext()) {
+                recipe.addIngredient(ingredientFromCursor(c));
+            }
+        }
+        return recipe;
+    }
+
+    private Recipe recipeFromCursor(Cursor c) {
+        return new Recipe(
+                c.getLong(c.getColumnIndexOrThrow(COL_RECIPE_ID)),
+                c.getString(c.getColumnIndexOrThrow(COL_RECIPE_NAME)),
+                c.getString(c.getColumnIndexOrThrow(COL_RECIPE_STEPS)),
+                c.getInt(c.getColumnIndexOrThrow(COL_RECIPE_MINUTES)),
+                c.getInt(c.getColumnIndexOrThrow(COL_RECIPE_SERVINGS)));
+    }
+
+    private RecipeIngredient ingredientFromCursor(Cursor c) {
+        return new RecipeIngredient(
+                c.getString(c.getColumnIndexOrThrow(COL_RI_NAME)),
+                c.getDouble(c.getColumnIndexOrThrow(COL_RI_QUANTITY)),
+                c.getString(c.getColumnIndexOrThrow(COL_RI_UNIT)));
     }
 }
