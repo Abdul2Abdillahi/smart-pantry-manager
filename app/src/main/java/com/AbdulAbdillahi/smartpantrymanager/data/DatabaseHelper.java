@@ -10,6 +10,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import com.AbdulAbdillahi.smartpantrymanager.logic.IngredientNormalizer;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 
 import com.AbdulAbdillahi.smartpantrymanager.model.Recipe;
@@ -26,7 +28,7 @@ import java.util.Map;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smart_pantry.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // ----- pantry_items table -----
     public static final String TABLE_PANTRY = "pantry_items";
@@ -122,6 +124,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             // Version 2 added the starter recipes
             RecipeSeeder.seed(db);
+        }
+        if (oldVersion < 3) {
+            // Version 3 introduced the full normaliser: recalculate every matching key
+            renormalizeAll(db);
+        }
+
+    }
+    /** Recalculates normalized_name for every row, e.g. after the normaliser's rules change. */
+    private static void renormalizeAll(SQLiteDatabase db) {
+        renormalizeTable(db, TABLE_PANTRY, COL_PANTRY_ID, COL_PANTRY_NAME, COL_PANTRY_NORMALIZED);
+        renormalizeTable(db, TABLE_RECIPE_INGREDIENTS, COL_RI_ID, COL_RI_NAME, COL_RI_NORMALIZED);
+    }
+
+    private static void renormalizeTable(SQLiteDatabase db, String table, String idColumn,
+                                         String nameColumn, String normalizedColumn) {
+        // Read everything first, then update: safer than changing a table while a cursor is reading it
+        List<Long> ids = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        try (Cursor c = db.query(table, new String[]{idColumn, nameColumn},
+                null, null, null, null, null)) {
+            while (c.moveToNext()) {
+                ids.add(c.getLong(0));
+                names.add(c.getString(1));
+            }
+        }
+
+        for (int i = 0; i < ids.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(normalizedColumn, normalize(names.get(i)));
+            try {
+                db.update(table, values, idColumn + " = ?", new String[]{String.valueOf(ids.get(i))});
+            } catch (SQLiteConstraintException e) {
+                // Two pantry items now count as the same ingredient (e.g. "Tomato" and "Tomatoes").
+                // Leave this one unchanged instead of crashing; the user can merge them by editing.
+            }
         }
     }
     // ===================== PANTRY CRUD =====================
@@ -219,9 +256,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.isNull(expiryIndex) ? null : c.getString(expiryIndex));
     }
 
-    /** Temporary: lowercase + trim. Replaced by the full normaliser on 9 October. */
+    /** Matching key for an ingredient name, shared by pantry items and recipe ingredients. */
     static String normalize(String name) {
-        return name.trim().toLowerCase(Locale.ROOT);
+        return IngredientNormalizer.normalize(name);
     }
     // ===================== RECIPES (read-only) =====================
 
