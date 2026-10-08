@@ -20,7 +20,7 @@ import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smart_pantry.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // ----- pantry_items table -----
     public static final String TABLE_PANTRY = "pantry_items";
@@ -105,16 +105,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Index speeds up "get all ingredients for recipe X", which the matcher runs often
         db.execSQL("CREATE INDEX idx_ri_recipe ON " + TABLE_RECIPE_INGREDIENTS
                 + "(" + COL_RI_RECIPE_ID + ")");
+        // Version 2: pre-load the starter recipes
+        RecipeSeeder.seed(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Simple strategy for this project: rebuild the tables on a schema change.
-        // (A production app would migrate the data instead of dropping it.)
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_INGREDIENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
-        onCreate(db);
+        // Apply each version's changes in order, so an older install catches up
+        // step by step without losing the user's pantry.
+        if (oldVersion < 2) {
+            // Version 2 added the starter recipes
+            RecipeSeeder.seed(db);
+        }
     }
     // ===================== PANTRY CRUD =====================
 
@@ -212,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /** Temporary: lowercase + trim. Replaced by the full normaliser on 9 October. */
-    private String normalize(String name) {
+    static String normalize(String name) {
         return name.trim().toLowerCase(Locale.ROOT);
     }
 }
