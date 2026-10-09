@@ -19,6 +19,7 @@ import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
 import com.AbdulAbdillahi.smartpantrymanager.UI.SettingsActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
 import com.AbdulAbdillahi.smartpantrymanager.UI.SuggestedRecipesActivity;
+import com.AbdulAbdillahi.smartpantrymanager.data.AppSettings;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
 import com.AbdulAbdillahi.smartpantrymanager.logic.RecipeMatcher;
@@ -96,12 +97,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPantry() {
         List<PantryItem> items = db.getAllPantryItems();
-        adapter.setItems(items);
+        int soonDays = new AppSettings(this).effectiveSoonDays();
+        adapter.setItems(items, soonDays);
 
         int needAttention = 0;
         LocalDate today = LocalDate.now();
         for (PantryItem item : items) {
-            if (Freshness.of(item.getExpiryDate(), today, Freshness.DEFAULT_SOON_DAYS).needsAttention()) {
+            if (Freshness.of(item.getExpiryDate(), today, soonDays).needsAttention()) {
                 needAttention++;
             }
         }

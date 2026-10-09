@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.AbdulAbdillahi.smartpantrymanager.R;
+import com.AbdulAbdillahi.smartpantrymanager.data.AppSettings;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.logic.Freshness;
 import com.AbdulAbdillahi.smartpantrymanager.logic.IngredientNormalizer;
@@ -87,11 +88,10 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         // we never want to encourage cooking with food that has gone off)
         Map<String, PantryItem> useSoonByKey = new HashMap<>();
         LocalDate today = LocalDate.now();
+        int soonDays = new AppSettings(this).effectiveSoonDays();
         for (PantryItem item : pantry) {
-            Freshness freshness = Freshness.of(item.getExpiryDate(), today, Freshness.DEFAULT_SOON_DAYS);
-            if (freshness == Freshness.USE_TODAY || freshness == Freshness.USE_SOON) {
-                useSoonByKey.put(IngredientNormalizer.normalize(item.getName()), item);
-            }
+            Freshness freshness = Freshness.of(item.getExpiryDate(), today, soonDays);
+
         }
 
         List<RecipeCardAdapter.Card> cards = new ArrayList<>();

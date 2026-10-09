@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.AbdulAbdillahi.smartpantrymanager.R;
+import com.AbdulAbdillahi.smartpantrymanager.data.AppSettings;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
 import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -92,7 +93,10 @@ public class EditIngredientActivity extends AppCompatActivity {
             setExpiry(savedInstanceState.getString(STATE_EXPIRY));
         } else if (editingItem != null) {
             fillForm(editingItem);
+
         } else {
+            // New item: start with the user's preferred unit already chosen
+            unitInput.setText(new AppSettings(this).getDefaultUnit(), false);
             setExpiry(null);
         }
 

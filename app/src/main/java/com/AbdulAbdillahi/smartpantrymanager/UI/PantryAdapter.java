@@ -26,8 +26,10 @@ import java.util.Locale;
  * Shows each pantry item as a jar on a shelf.
  * Lid colour = freshness, fill level = how much of the original amount is left.
  */
+
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHolder> {
 
+    private int soonDays = Freshness.DEFAULT_SOON_DAYS;
     /** Lets the screen react when a jar is tapped (used for editing). */
     public interface OnJarClickListener {
         void onJarClick(PantryItem item);
@@ -40,8 +42,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHol
         this.listener = listener;
     }
 
-    /** Replaces the whole list, e.g. after reloading from the database. */
-    public void setItems(List<PantryItem> newItems) {
+    /** Replaces the whole list. soonDays comes from the user's settings. */
+    public void setItems(List<PantryItem> newItems, int soonDays) {
+        this.soonDays = soonDays;
         items.clear();
         items.addAll(newItems);
         notifyDataSetChanged();
@@ -57,7 +60,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHol
 
     @Override
     public void onBindViewHolder(@NonNull JarViewHolder holder, int position) {
-        holder.bind(items.get(position), listener);
+        holder.bind(items.get(position), soonDays, listener);
     }
 
     @Override
@@ -89,14 +92,13 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHol
             body.setClipToOutline(true); // keeps the fill inside the jar's rounded corners
         }
 
-        void bind(PantryItem item, OnJarClickListener listener) {
+        void bind(PantryItem item, int soonDays, OnJarClickListener listener) {
             Context context = itemView.getContext();
             name.setText(item.getName());
             quantity.setText(context.getString(R.string.quantity_with_unit,
                     TextFormat.quantity(item.getQuantity()), item.getUnit()));
 
-            Freshness freshness = Freshness.of(item.getExpiryDate(),
-                    LocalDate.now(), Freshness.DEFAULT_SOON_DAYS);
+            Freshness freshness = Freshness.of(item.getExpiryDate(), LocalDate.now(), soonDays);
             applyFreshness(context, freshness, item);
 
             // Fill level: share of the original amount still left.
