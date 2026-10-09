@@ -1,6 +1,7 @@
 package com.AbdulAbdillahi.smartpantrymanager.UI;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -62,9 +63,12 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
         findViewById(R.id.goToShelfButton).setOnClickListener(v -> finish());
 
-        adapter = new RecipeCardAdapter(recipe ->
-                // The Recipe Detail screen comes next session
-                Toast.makeText(this, recipe.getName(), Toast.LENGTH_SHORT).show());
+        // Tapping a card opens the full recipe, passing its id in the Intent
+        adapter = new RecipeCardAdapter(recipe -> {
+            Intent intent = new Intent(this, RecipeDetailActivity.class);
+            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
+            startActivity(intent);
+        });
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
     }

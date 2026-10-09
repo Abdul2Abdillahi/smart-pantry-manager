@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One numbered step of the method -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp">
+
+    <TextView
+        android:id="@+id/stepNumber"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/step_circle"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/stepText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:lineSpacingExtra="4dp"
+        android:textColor="@color/ink"
+        android:textSize="16sp"
+        tools:text="Boil the pasta in salted water until tender, then drain." />
+</LinearLayout>

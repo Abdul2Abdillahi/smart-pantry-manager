@@ -77,4 +77,19 @@
         <item quantity="other">%d new recipes unlocked!</item>
     </plurals>
 
+    <!-- Recipe Detail screen -->
+    <string name="heading_ingredients">Ingredients</string>
+    <string name="heading_method">Method</string>
+    <string name="detail_have_everything">✓ You have everything for this recipe</string>
+    <string name="detail_you_have">You have %1$s</string>
+    <string name="detail_not_on_shelf">Not on your shelf</string>
+    <string name="detail_not_enough">Not enough: you have %1$s</string>
+    <string name="detail_different_unit">You have %1$s, which can\'t be compared</string>
+    <string name="mark_have">✓</string>
+    <string name="mark_missing">✗</string>
+    <plurals name="detail_missing_count">
+        <item quantity="one">%d ingredient missing</item>
+        <item quantity="other">%d ingredients missing</item>
+    </plurals>
+
 </resources>
