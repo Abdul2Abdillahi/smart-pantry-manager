@@ -95,7 +95,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Ca
 
             List<String> names = new ArrayList<>();
             for (RecipeIngredient ingredient : recipe.getIngredients()) {
-                names.add(capitalise(ingredient.getName()));
+                TextFormat.capitalise(ingredient.getName());
             }
             ingredients.setText(TextUtils.join(" · ", names));
 
@@ -115,9 +115,5 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Ca
             itemView.setOnClickListener(v -> listener.onRecipeClick(recipe));
         }
 
-        private static String capitalise(String text) {
-            return text.isEmpty() ? text
-                    : Character.toUpperCase(text.charAt(0)) + text.substring(1);
-        }
     }
 }

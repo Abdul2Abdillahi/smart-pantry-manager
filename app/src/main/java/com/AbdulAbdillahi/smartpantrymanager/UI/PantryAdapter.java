@@ -66,12 +66,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHol
     }
 
     /** Shows 6.0 as "6" but keeps 0.5 as "0.5". */
-    static String formatQuantity(double value) {
-        if (value == Math.floor(value)) {
-            return String.valueOf((long) value);
-        }
-        return String.valueOf(value);
-    }
+
 
     /** Holds the views of one jar so they're looked up once, not on every scroll. */
    public static class JarViewHolder extends RecyclerView.ViewHolder {
@@ -98,7 +93,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.JarViewHol
             Context context = itemView.getContext();
             name.setText(item.getName());
             quantity.setText(context.getString(R.string.quantity_with_unit,
-                    formatQuantity(item.getQuantity()), item.getUnit()));
+                    TextFormat.quantity(item.getQuantity()), item.getUnit()));
 
             Freshness freshness = Freshness.of(item.getExpiryDate(),
                     LocalDate.now(), Freshness.DEFAULT_SOON_DAYS);

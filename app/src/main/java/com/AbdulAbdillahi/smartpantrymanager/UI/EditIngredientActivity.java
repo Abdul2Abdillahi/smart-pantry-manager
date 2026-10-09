@@ -138,7 +138,7 @@ public class EditIngredientActivity extends AppCompatActivity {
     /** Pre-fills the form with an existing item's values (edit mode). */
     private void fillForm(PantryItem item) {
         nameInput.setText(item.getName());
-        quantityInput.setText(PantryAdapter.formatQuantity(item.getQuantity()));
+        quantityInput.setText(TextFormat.quantity(item.getQuantity()));
         unitInput.setText(item.getUnit(), false); // false = don't filter the dropdown
         setExpiry(item.getExpiryDate());
     }
