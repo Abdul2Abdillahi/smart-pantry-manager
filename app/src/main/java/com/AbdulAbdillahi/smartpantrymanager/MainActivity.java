@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.AbdulAbdillahi.smartpantrymanager.UI.EditIngredientActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
+import com.AbdulAbdillahi.smartpantrymanager.UI.SettingsActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.ShelfDecoration;
 import com.AbdulAbdillahi.smartpantrymanager.UI.SuggestedRecipesActivity;
 import com.AbdulAbdillahi.smartpantrymanager.data.DatabaseHelper;
@@ -79,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.cookTonightButton).setOnClickListener(v ->
                 startActivity(new Intent(this, SuggestedRecipesActivity.class)));
+
+        findViewById(R.id.settingsButton).setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
 
     }
 

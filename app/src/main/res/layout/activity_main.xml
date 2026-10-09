@@ -34,6 +34,16 @@
             android:layout_height="wrap_content"
             android:text="@string/action_cook_tonight"
             app:backgroundTint="@color/ink" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settingsButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:contentDescription="@string/cd_settings"
+            app:icon="@drawable/ic_settings"
+            app:iconTint="@color/ink" />
     </LinearLayout>
 
     <TextView
