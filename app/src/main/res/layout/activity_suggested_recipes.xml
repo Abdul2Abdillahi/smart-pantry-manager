@@ -89,6 +89,20 @@
         </LinearLayout>
     </FrameLayout>
 
+    <!-- Bonus: separate link to recipes missing one ingredient -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/almostThereButton"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/wood"
+        android:visibility="gone"
+        tools:text="2 recipes are one ingredient away →"
+        tools:visibility="visible" />
+
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"

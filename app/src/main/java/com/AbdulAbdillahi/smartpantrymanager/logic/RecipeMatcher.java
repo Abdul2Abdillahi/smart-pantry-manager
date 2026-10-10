@@ -66,7 +66,19 @@ public final class RecipeMatcher {
         }
         return suggested;
     }
-
+    /**
+     * BONUS: recipes missing exactly ONE ingredient. Kept completely separate
+     * from suggest(), so these can never appear in the strict suggestions list.
+     */
+    public static List<MatchResult> almostThere(List<Recipe> recipes, List<PantryItem> pantry) {
+        List<MatchResult> results = new ArrayList<>();
+        for (MatchResult result : evaluate(recipes, pantry)) {
+            if (result.getMissing().size() == 1) {
+                results.add(result);
+            }
+        }
+        return results;
+    }
     /** Files each pantry item under its matching key, e.g. "Tomatoes" under "tomato". */
     private static Map<String, PantryItem> indexPantry(List<PantryItem> pantry) {
         Map<String, PantryItem> byKey = new HashMap<>();

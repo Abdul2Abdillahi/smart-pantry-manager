@@ -138,4 +138,32 @@ public class RecipeMatcherTest {
         assertEquals(1, result.getMissing().size());
         assertEquals("garlic", result.getMissing().get(0).getName());
     }
+
+    // ---------- Almost There (bonus) ----------
+
+    @Test
+    public void almostThere_includesRecipeMissingExactlyOne() {
+        Recipe pasta = recipe("Pasta", "pasta|200|g", "garlic|3|pcs");
+        assertEquals(1, RecipeMatcher.almostThere(
+                Collections.singletonList(pasta),
+                Collections.singletonList(item("Pasta", 500, "g"))).size());
+    }
+
+    @Test
+    public void almostThere_excludesRecipeMissingTwo() {
+        Recipe pasta = recipe("Pasta", "pasta|200|g", "garlic|3|pcs", "butter|50|g");
+        assertTrue(RecipeMatcher.almostThere(
+                Collections.singletonList(pasta),
+                Collections.singletonList(item("Pasta", 500, "g"))).isEmpty());
+    }
+
+    @Test
+    public void almostThere_neverIncludesCompleteRecipes() {
+        // Strict suggestions and Almost There must never overlap
+        Recipe pasta = recipe("Pasta", "pasta|200|g");
+        assertTrue(RecipeMatcher.almostThere(
+                Collections.singletonList(pasta),
+                Collections.singletonList(item("Pasta", 500, "g"))).isEmpty());
+    }
+
 }

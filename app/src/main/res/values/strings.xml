@@ -111,4 +111,15 @@
     <string name="nav_recipes">Recipes</string>
     <string name="nav_settings">Settings</string>
     <string name="error_whole_pieces">Pieces must be a whole number</string>
+
+    <!-- Almost There (bonus) -->
+    <string name="almost_title">Almost there</string>
+    <string name="almost_subtitle">Recipes that need just one more ingredient. These are not suggestions: add the missing item to unlock them.</string>
+    <string name="almost_missing">✗ Missing: %1$s (%2$s)</string>
+    <string name="almost_empty">No recipes are one ingredient away right now.</string>
+    <plurals name="almost_link">
+        <item quantity="one">%d recipe is one ingredient away →</item>
+        <item quantity="other">%d recipes are one ingredient away →</item>
+    </plurals>
+
 </resources>

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.AbdulAbdillahi.smartpantrymanager.R;
@@ -24,14 +25,24 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Ca
         void onRecipeClick(Recipe recipe);
     }
 
-    /** One suggested recipe, plus the names of expiring pantry items it would use up. */
+    /** One recipe card. missingText is null for strict suggestions. */
     public static final class Card {
         final Recipe recipe;
         final List<String> usesUp;
+        final String missingText;
 
+        /** A strict suggestion: shows "✓ All ingredients on your shelf". */
         public Card(Recipe recipe, List<String> usesUp) {
             this.recipe = recipe;
             this.usesUp = usesUp;
+            this.missingText = null;
+        }
+
+        /** An Almost There card: shows what's missing instead. */
+        public Card(Recipe recipe, String missingText) {
+            this.recipe = recipe;
+            this.usesUp = new ArrayList<>();
+            this.missingText = missingText;
         }
     }
 
@@ -89,9 +100,15 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Ca
 
             name.setText(recipe.getName());
 
-            int count = recipe.getIngredients().size();
-            haveAll.setText(context.getResources()
-                    .getQuantityString(R.plurals.recipe_have_all, count, count));
+            if (card.missingText == null) {
+                int count = recipe.getIngredients().size();
+                haveAll.setText(context.getResources()
+                        .getQuantityString(R.plurals.recipe_have_all, count, count));
+                haveAll.setTextColor(ContextCompat.getColor(context, R.color.fresh_dark));
+            } else {
+                haveAll.setText(card.missingText);
+                haveAll.setTextColor(ContextCompat.getColor(context, R.color.urgent_text));
+            }
 
             List<String> names = new ArrayList<>();
             for (RecipeIngredient ingredient : recipe.getIngredients()) {

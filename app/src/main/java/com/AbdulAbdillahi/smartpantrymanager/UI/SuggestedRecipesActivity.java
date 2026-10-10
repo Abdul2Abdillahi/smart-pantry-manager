@@ -25,6 +25,7 @@ import com.AbdulAbdillahi.smartpantrymanager.model.PantryItem;
 import com.AbdulAbdillahi.smartpantrymanager.model.Recipe;
 import com.AbdulAbdillahi.smartpantrymanager.model.RecipeIngredient;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,8 +37,11 @@ import java.util.Map;
  * Lists ONLY the recipes the user can make right now (strict matching),
  * with recipes that use up soon-to-expire food first.
  */
+
+
 public class SuggestedRecipesActivity extends AppCompatActivity {
 
+    private MaterialButton almostThereButton;
     private DatabaseHelper db;
     private RecipeCardAdapter adapter;
     private TextView subtitle;
@@ -72,6 +76,11 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         });
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
+
+        almostThereButton = findViewById(R.id.almostThereButton);
+        almostThereButton.setOnClickListener(v ->
+                startActivity(new Intent(this, AlmostThereActivity.class)));
+
         BottomNav.setup(this, R.id.nav_recipes);
     }
 
@@ -83,7 +92,8 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private void loadSuggestions() {
         List<PantryItem> pantry = db.getAllPantryItems();
-        List<Recipe> suggested = RecipeMatcher.suggest(db.getAllRecipes(), pantry);
+        List<Recipe> allRecipes = db.getAllRecipes();
+        List<Recipe> suggested = RecipeMatcher.suggest(allRecipes, pantry);
 
         // Pantry items that should be used soon (expired items are left out on purpose:
         // we never want to encourage cooking with food that has gone off)
@@ -92,9 +102,13 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         int soonDays = new AppSettings(this).effectiveSoonDays();
         for (PantryItem item : pantry) {
             Freshness freshness = Freshness.of(item.getExpiryDate(), today, soonDays);
-            if (freshness == Freshness.USE_TODAY || freshness == Freshness.USE_SOON) {
-                useSoonByKey.put(IngredientNormalizer.normalize(item.getName()), item);
-            }
+
+            // Bonus: show a link only if some recipes are one ingredient away
+            int almostCount = RecipeMatcher.almostThere(allRecipes, pantry).size();
+            almostThereButton.setVisibility(almostCount > 0 ? View.VISIBLE : View.GONE);
+            almostThereButton.setText(getResources().getQuantityString(
+                    R.plurals.almost_link, almostCount, almostCount));
+
         }
 
         List<RecipeCardAdapter.Card> cards = new ArrayList<>();
