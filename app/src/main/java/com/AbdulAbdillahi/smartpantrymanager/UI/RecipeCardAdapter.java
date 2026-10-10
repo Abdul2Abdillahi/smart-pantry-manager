@@ -95,7 +95,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Ca
 
             List<String> names = new ArrayList<>();
             for (RecipeIngredient ingredient : recipe.getIngredients()) {
-                TextFormat.capitalise(ingredient.getName());
+             names.add(TextFormat.capitalise(ingredient.getName()));
             }
             ingredients.setText(TextUtils.join(" · ", names));
 

@@ -92,7 +92,9 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         int soonDays = new AppSettings(this).effectiveSoonDays();
         for (PantryItem item : pantry) {
             Freshness freshness = Freshness.of(item.getExpiryDate(), today, soonDays);
-
+            if (freshness == Freshness.USE_TODAY || freshness == Freshness.USE_SOON) {
+                useSoonByKey.put(IngredientNormalizer.normalize(item.getName()), item);
+            }
         }
 
         List<RecipeCardAdapter.Card> cards = new ArrayList<>();

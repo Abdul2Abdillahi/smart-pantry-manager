@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/wood</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="android:windowBackground">@color/shelf_background</item>
+        <item name="android:fontFamily">@font/nunito_sans</item>
+
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>

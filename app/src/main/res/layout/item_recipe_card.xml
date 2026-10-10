@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/ink"
-            android:textSize="24sp"
+            android:fontFamily="@font/app_handwritten"
+            android:textSize="30sp"
             android:textStyle="bold"
             tools:text="Garlic Butter Pasta" />
 
