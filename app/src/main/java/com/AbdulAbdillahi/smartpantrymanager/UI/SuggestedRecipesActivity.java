@@ -72,6 +72,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         });
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
+        BottomNav.setup(this, R.id.nav_recipes);
     }
 
     @Override

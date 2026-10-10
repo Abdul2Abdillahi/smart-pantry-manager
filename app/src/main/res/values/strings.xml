@@ -107,4 +107,8 @@
         <item quantity="other">Warn me %d days before it expires</item>
     </plurals>
 
+    <string name="nav_shelf">Shelf</string>
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_settings">Settings</string>
+
 </resources>

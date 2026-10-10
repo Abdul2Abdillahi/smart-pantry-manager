@@ -87,4 +87,17 @@
                 app:backgroundTint="@color/wood" />
         </LinearLayout>
     </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/nav_background"
+        app:itemActiveIndicatorStyle="@style/ShelfNavIndicator"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu"
+        app:paddingBottomSystemWindowInsets="false" />
+
 </LinearLayout>

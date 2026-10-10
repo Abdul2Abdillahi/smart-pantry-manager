@@ -65,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         defaultUnitInput.setOnItemClickListener((parent, view, position, id) ->
                 settings.setDefaultUnit((String) parent.getItemAtPosition(position)));
+        BottomNav.setup(this, R.id.nav_settings);
     }
 
     private void updateDaysLabel(int days) {

@@ -23,4 +23,7 @@
     <color name="card_rule">#C8553D</color>
     <color name="fresh_dark">#45663F</color>
 
+    <color name="nav_background">#FFFBF4</color>
+    <color name="nav_indicator">#EAD9C2</color>
+
 </resources>

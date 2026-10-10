@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.AbdulAbdillahi.smartpantrymanager.UI.BottomNav;
 import com.AbdulAbdillahi.smartpantrymanager.UI.EditIngredientActivity;
 import com.AbdulAbdillahi.smartpantrymanager.UI.PantryAdapter;
 import com.AbdulAbdillahi.smartpantrymanager.UI.SettingsActivity;
@@ -79,12 +80,7 @@ public class MainActivity extends AppCompatActivity {
         addFab.setOnClickListener(v ->
                 startActivity(new Intent(this, EditIngredientActivity.class)));
 
-        findViewById(R.id.cookTonightButton).setOnClickListener(v ->
-                startActivity(new Intent(this, SuggestedRecipesActivity.class)));
-
-        findViewById(R.id.settingsButton).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
-
+        BottomNav.setup(this, R.id.nav_shelf);
     }
 
     @Override
@@ -151,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTextColor(ContextCompat.getColor(this, android.R.color.white))
                 .setActionTextColor(ContextCompat.getColor(this, R.color.soon))
                 .setAction(R.string.action_view, v ->
-                        startActivity(new Intent(this, SuggestedRecipesActivity.class)))
+                        BottomNav.open(this, SuggestedRecipesActivity.class))
                 .show();
     }
 }
