@@ -179,7 +179,7 @@ public class EditIngredientActivity extends AppCompatActivity {
             return;
         }
 
-        String name = textOf(nameInput);
+        String name = TextFormat.capitalise(textOf(nameInput)); // "onions" -> "Onions"
         double quantity = Double.parseDouble(textOf(quantityInput).replace(',', '.'));
         String unit = textOf(unitInput);
 
@@ -265,6 +265,15 @@ public class EditIngredientActivity extends AppCompatActivity {
             valid = false;
         } else {
             expiryLayout.setError(null);
+        }
+
+        // Counted items must be whole: "5.5 pcs" of something isn't meaningful
+        if (valid && "pcs".equals(textOf(unitInput))) {
+            double quantity = Double.parseDouble(quantityText);
+            if (quantity != Math.floor(quantity)) {
+                quantityLayout.setError(getString(R.string.error_whole_pieces));
+                valid = false;
+            }
         }
 
         return valid;
