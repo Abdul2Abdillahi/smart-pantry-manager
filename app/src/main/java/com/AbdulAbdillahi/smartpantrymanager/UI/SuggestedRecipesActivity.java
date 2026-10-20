@@ -102,13 +102,9 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         int soonDays = new AppSettings(this).effectiveSoonDays();
         for (PantryItem item : pantry) {
             Freshness freshness = Freshness.of(item.getExpiryDate(), today, soonDays);
-
-            // Bonus: show a link only if some recipes are one ingredient away
-            int almostCount = RecipeMatcher.almostThere(allRecipes, pantry).size();
-            almostThereButton.setVisibility(almostCount > 0 ? View.VISIBLE : View.GONE);
-            almostThereButton.setText(getResources().getQuantityString(
-                    R.plurals.almost_link, almostCount, almostCount));
-
+            if (freshness == Freshness.USE_TODAY || freshness == Freshness.USE_SOON) {
+                useSoonByKey.put(IngredientNormalizer.normalize(item.getName()), item);
+            }
         }
 
         List<RecipeCardAdapter.Card> cards = new ArrayList<>();
